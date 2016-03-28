@@ -93,5 +93,8 @@ VOLUME /pydio-data/personal
 # Add supervisord conf
 ADD conf/startup.conf /etc/supervisor/conf.d/
 
+# Allow the www-data user access to shared folders.
+RUN usermod -u 1000 www-data
+
 # Start supervisor, define default command.
 CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
