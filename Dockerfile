@@ -2,12 +2,26 @@
 # Based on a work at https://github.com/docker/docker.
 # ------------------------------------------------------------------------------
 # Pull base image.
-FROM kdelfour/supervisor-docker
-MAINTAINER Kevin Delfour <kevin@delfour.eu>
+FROM resin/rpi-raspbian
+MAINTAINER Jordan Crawford <jordan.crawford@me.com>
+
+# ------------------------------------------------------------------------------
+# Install Supervisor
+RUN \
+  apt-get update && \
+  apt-get install -y supervisor && \
+  sed -i 's/^\(\[supervisord\]\)$/\1\nnodaemon=true/' /etc/supervisor/supervisord.conf
+
+# Define mountable directories.
+VOLUME ["/etc/supervisor/conf.d"]
+
+# ------------------------------------------------------------------------------
+# Security changes
+# - Determine runlevel and services at startup [BOOT-5180]
+RUN update-rc.d supervisor defaults
 
 # ------------------------------------------------------------------------------
 # Install Base
-RUN apt-get update
 RUN apt-get install -yq wget unzip nginx fontconfig-config fonts-dejavu-core \
     php5-fpm php5-common php5-json php5-cli php5-common php5-mysql\
     php5-gd php5-json php5-mcrypt php5-readline psmisc ssl-cert \
@@ -32,7 +46,6 @@ RUN php5enmod mcrypt
 
 # ------------------------------------------------------------------------------
 # Configure nginx
-RUN mkdir /var/www
 RUN chown www-data:www-data /var/www
 RUN rm /etc/nginx/sites-enabled/*
 RUN rm /etc/nginx/sites-available/*
@@ -51,7 +64,7 @@ RUN update-rc.d mysql defaults
 
 # ------------------------------------------------------------------------------
 # Install Pydio
-ENV PYDIO_VERSION 6.2.0
+ARG PYDIO_VERSION=6.2.2
 WORKDIR /var/www
 RUN wget http://downloads.sourceforge.net/project/ajaxplorer/pydio/stable-channel/${PYDIO_VERSION}/pydio-core-${PYDIO_VERSION}.zip
 RUN unzip pydio-core-${PYDIO_VERSION}.zip
@@ -60,6 +73,9 @@ RUN chown -R www-data:www-data /var/www/pydio-core
 RUN chmod -R 770 /var/www/pydio-core
 RUN chmod 777  /var/www/pydio-core/data/files/
 RUN chmod 777  /var/www/pydio-core/data/personal/
+
+# Clean up
+RUN rm -rf /var/lib/apt/lists/*
 
 WORKDIR /
 RUN ln -s /var/www/pydio-core/data pydio-data 
