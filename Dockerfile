@@ -93,7 +93,7 @@ VOLUME /pydio-data/personal
 # Add supervisord conf
 ADD conf/startup.conf /etc/supervisor/conf.d/
 
-# Allow the www-data user access to shared folders.
+# Use uid 1000 for www-data for consistancy with Hypriot OS's pi user (for shared network drives).
 RUN usermod -u 1000 www-data
 
 # Start supervisor, define default command.
