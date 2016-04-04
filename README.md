@@ -1,26 +1,29 @@
-Pydio Dockerfile
+[View on GitHub](https://github.com/jordancrawfordnz/rpi-pydio-docker)
+
+[View on Docker Hub](https://hub.docker.com/r/jordancrawford/rpi-pydio-docker/)
+
+RPi Pydio Docker
 =============
+This repository allows you to run Pydio on your Raspberry Pi with Docker. This includes a built in MySQL server for an easy setup.
 
-This repository contains Dockerfile of Pydio for Docker's automated build published to the public Docker Hub Registry.
+This has been adapted from the x86 version at [kdelfour/pydio-docker](https://github.com/kdelfour/pydio-docker).
 
-# Base Docker Image
-[kdelfour/supervisor-docker](https://registry.hub.docker.com/u/kdelfour/supervisor-docker/)
+# About Pydio
+
+Pydio is like Google Drive for your personal cloud. See the Pydio website at: https://pydio.com/
 
 # Installation
+Download from Docker Hub: ``docker pull jordancrawford/rpi-pydio-docker``
 
-## Install Docker.
-
-Download automated build from public Docker Hub Registry: docker pull kdelfour/pydio-docker
-
-(alternatively, you can build an image from Dockerfile: docker build -t="kdelfour/pydio-docker" github.com/kdelfour/pydio-docker)
+(alternatively, you can build an image from Dockerfile: ``docker build -t jordancrawford/rpi-pydio-docker``)
 
 ## Usage
 
-    docker run -it -d -p 80:80 -p 443:443 kdelfour/pydio-docker
+    docker run -it -d -p 80:80 -p 443:443 jordancrawford/rpi-pydio-docker
     
 You can add a shared directory as a volume directory with the argument *-v /your-path/files/:/pydio-data/files/ -v /your-path/personal/:/pydio-data/personal/* like this :
 
-    docker run -it -d -p 80:80 -p 443:443 -v /your-path/files/:/pydio-data/files/ -v /your-path/personal/:/pydio-data/personal/ kdelfour/pydio-docker
+    docker run -it -d -p 80:80 -p 443:443 -v /your-path/files/:/pydio-data/files/ -v /your-path/personal/:/pydio-data/personal/ jordancrawford/rpi-pydio-docker
 
 A mysql server with a database is ready, you can use it with this parameters : 
 
@@ -31,25 +34,37 @@ A mysql server with a database is ready, you can use it with this parameters :
     
 ## Build and run with custom config directory
 
-Get the latest version from github
+Get the latest version from Github.
 
-    git clone https://github.com/kdelfour/pydio-docker
-    cd pydio-docker/
+    git clone https://github.com/jordancrawford/rpi-pydio-docker
+    cd rpi-pydio-docker/
 
 Build it
 
-    sudo docker build --force-rm=true --tag="$USER/pydio-docker:latest" .
+    sudo docker build --force-rm=true --tag="jordancrawford/rpi-pydio-docker:latest" .
     
 And run
 
-    sudo docker run -d -p 80:80 -p 443:443 -v /your-path/files/:/pydio-data/files/ -v /your-path/personal/:/pydio-data/personal/ $USER/pydio-docker:latest
+    sudo docker run -d -p 80:80 -p 443:443 -v /your-path/files/:/pydio-data/files/ -v /your-path/personal/:/pydio-data/personal/ jordancrawford/rpi-pydio-docker:latest
+
+## Using host folders
+
+Pydio is great to use with host folders. Add these as a Docker volume like:
+
+    sudo docker run -d -p 80:80 -p 443:443 -v /harddrive:/harddrive jordancrawford/rpi-pydio-docker:latest
+
+Then create a file system workspace at ``/harddrive``.
+
+### File ownership
+
+Pydio runs as the ``www-data`` user (with uid of 1000). In an OS like Hypriot OS, this matches up with the ``pi`` user. You must ensure your host folder is accessable to the user with the uid 1000.
 
 ## After the installation
 
 To make sure that share feature will work, go to Main Pydio Option and add  :
 
-  * server URL : https//your_server_name
-  * download folder : /var/www/pydio-core/data/public
-  * server download URL : https//your_server_name/data/public
-  
-Great and Enjoy !!
+  * Server URL: https//your_server_name
+  * Download folder: /var/www/pydio-core/data/public
+  * Server download URL: https//your_server_name/data/public
+
+Enjoy!
