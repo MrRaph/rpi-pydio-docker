@@ -12,6 +12,8 @@ This has been adapted from the x86 version at [kdelfour/pydio-docker](https://gi
 
 Pydio is like Google Drive for your personal cloud. See the Pydio website at: https://pydio.com/
 
+### [Using this container as part of a Raspberry Pi home server](https://jordancrawford.kiwi/rpi-home-server/)
+
 # Installation
 Download from Docker Hub: ``docker pull jordancrawford/rpi-pydio-docker``
 
