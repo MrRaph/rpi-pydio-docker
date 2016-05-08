@@ -3,7 +3,7 @@
 # ------------------------------------------------------------------------------
 # Pull base image.
 FROM resin/rpi-raspbian
-MAINTAINER Jordan Crawford <me@jordancrawford.co.nz>
+MAINTAINER Jordan Crawford <jordan@crawford.kiwi>
 
 # ------------------------------------------------------------------------------
 # Install Supervisor
