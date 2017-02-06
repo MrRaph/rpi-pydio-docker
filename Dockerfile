@@ -25,17 +25,8 @@ RUN update-rc.d supervisor defaults
 RUN apt-get install -yq wget unzip nginx fontconfig-config fonts-dejavu-core \
     php5-fpm php5-common php5-json php5-cli php5-common php5-mysql\
     php5-gd php5-json php5-mcrypt php5-readline psmisc ssl-cert \
-    ufw php-pear libgd-tools libmcrypt-dev mcrypt mysql-server mysql-client
+    ufw php-pear libgd-tools libmcrypt-dev mcrypt mysql-client
 
-# ------------------------------------------------------------------------------
-# Configure mysql
-RUN sed -i -e"s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
-RUN service mysql start && \
-    mysql -uroot -e "CREATE DATABASE IF NOT EXISTS pydio;" && \
-    mysql -uroot -e "CREATE USER 'pydio'@'localhost' IDENTIFIED BY 'pydio';" && \
-    mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO 'pydio'@'localhost' WITH GRANT OPTION;" && \
-    mysql -uroot -e "FLUSH PRIVILEGES;"
-    
 # ------------------------------------------------------------------------------
 # Configure php-fpm
 RUN sed -i -e "s/output_buffering\s*=\s*4096/output_buffering = Off/g" /etc/php5/fpm/php.ini
@@ -60,11 +51,10 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/n
 # Configure services
 RUN update-rc.d nginx defaults
 RUN update-rc.d php5-fpm defaults
-RUN update-rc.d mysql defaults
 
 # ------------------------------------------------------------------------------
 # Install Pydio
-ARG PYDIO_VERSION=6.2.2
+ARG PYDIO_VERSION=7.0.4
 WORKDIR /var/www
 RUN wget http://downloads.sourceforge.net/project/ajaxplorer/pydio/stable-channel/${PYDIO_VERSION}/pydio-core-${PYDIO_VERSION}.zip
 RUN unzip pydio-core-${PYDIO_VERSION}.zip

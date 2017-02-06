@@ -4,7 +4,7 @@
 
 RPi Pydio Docker
 =============
-This repository allows you to run Pydio on your Raspberry Pi with Docker. This includes a built in MySQL server for an easy setup.
+This repository allows you to run Pydio on your Raspberry Pi with Docker. This DOESN'T includes a built in MySQL server.
 
 This has been adapted from the x86 version at [kdelfour/pydio-docker](https://github.com/kdelfour/pydio-docker).
 
